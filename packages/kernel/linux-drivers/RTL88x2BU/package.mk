@@ -4,7 +4,7 @@
 # Copyright (C) 2021-present Fewtarius
 
 PKG_NAME="RTL88x2BU"
-PKG_VERSION="9a04d2bb9d882c7f2708560774d7b96a70d83f4b"
+PKG_VERSION="d0f2241ec5ba06412c6142f62b1a37a5d11b3236"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/morrownr/88x2bu-20210702"
 PKG_URL="${PKG_SITE}.git"

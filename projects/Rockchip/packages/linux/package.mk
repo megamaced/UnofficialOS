@@ -9,7 +9,7 @@ PKG_NAME="linux"
 PKG_LICENSE="GPL"
 PKG_SITE="https://github.com/JustEnoughLinuxOS"
 PKG_DEPENDS_HOST="ccache:host rsync:host openssl:host"
-PKG_DEPENDS_TARGET="toolchain linux:host cpio:host kmod:host xz:host wireless-regdb keyutils util-linux binutils ncurses openssl:host ${KERNEL_EXTRA_DEPENDS_TARGET}"
+PKG_DEPENDS_TARGET="toolchain linux:host cpio:host kmod:host xz:host wireless-regdb keyutils util-linux binutils ncurses openssl:host glibc ${KERNEL_EXTRA_DEPENDS_TARGET}"
 PKG_DEPENDS_INIT="toolchain"
 PKG_NEED_UNPACK="${LINUX_DEPENDS} $(get_pkg_directory busybox)"
 PKG_LONGDESC="This package builds the kernel for Rockchip devices"
@@ -18,21 +18,15 @@ PKG_STAMP="${KERNEL_TARGET} ${KERNEL_MAKE_EXTRACMD}"
 PKG_PATCH_DIRS+="${DEVICE}"
 
 case ${DEVICE} in
-  RG351P|RG351V|RG351MP|RGB20S)
-    PKG_URL="${PKG_SITE}/rk3326-kernel.git"
-    PKG_VERSION="0b4eef36a"
-    GET_HANDLER_SUPPORT="git"
-    PKG_GIT_CLONE_BRANCH="main"
-  ;;
   RG552)
-    PKG_VERSION="6.0.11"
+    PKG_VERSION="6.1.6"
     PKG_URL="https://www.kernel.org/pub/linux/kernel/v6.x/${PKG_NAME}-${PKG_VERSION}.tar.xz"
   ;;
   RG353P|RG503)
     PKG_URL="${PKG_SITE}/rk356x-kernel.git"
     PKG_VERSION="364fa42"
     GET_HANDLER_SUPPORT="git"
-    PKG_GIT_CLONE_BRANCH="main"
+    PKG_GIT_CLONE_BRANCH="orange-pi-5.10-rk3588"
   ;;
 esac
 
@@ -233,7 +227,7 @@ make_target() {
 
     KERNEL_TARGET="${KERNEL_UIMAGE_TARGET}"
   fi
-  if [ "${PKG_SOC}" = "rk356x" ]; then
+  if [ "${PKG_SOC}" = "rk35*" ]; then
       kernel_make ${KERNEL_TARGET} ${KERNEL_MAKE_EXTRACMD} ARCH=arm64 ${DEVICE_DTB[0]}.img
   fi
 }
@@ -247,7 +241,7 @@ makeinstall_target() {
         cp -v ${dtb} ${INSTALL}/usr/share/bootloader
       fi
     done
-    if [ "${PKG_SOC}" = "rk356x" ]; then
+    if [ "${PKG_SOC}" = "rk35*" ]; then
       ARCH=arm64 scripts/mkimg --dtb ${DEVICE_DTB[0]}.dtb
       cp -v resource.img ${INSTALL}/usr/share/bootloader
       ARCH=${TARGET_ARCH}
